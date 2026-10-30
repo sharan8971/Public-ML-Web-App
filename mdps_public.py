@@ -85,70 +85,95 @@ if (selected == 'Diabetes Prediction'):
 
 
 
+
 # Heart Disease Prediction Page
 if (selected == 'Heart Disease Prediction'):
-    
+
     # page title
     st.title('Heart Disease Prediction using ML')
-    
+
     col1, col2, col3 = st.columns(3)
-    
+
     with col1:
-        age = st.text_input('Age')
-        
+        age = st.number_input('Age', min_value=1, max_value=120, value=50, step=1)
+
     with col2:
-        sex = st.text_input('Sex')
-        
+        sex = st.selectbox('Sex', options=[0, 1],
+                           format_func=lambda x: 'Female' if x == 0 else 'Male')
+
     with col3:
-        cp = st.text_input('Chest Pain types')
-        
+        cp = st.selectbox('Chest Pain types', options=[0, 1, 2, 3],
+                          format_func=lambda x: {0: '0 - Typical angina',
+                                                 1: '1 - Atypical angina',
+                                                 2: '2 - Non-anginal pain',
+                                                 3: '3 - Asymptomatic'}[x])
+
     with col1:
-        trestbps = st.text_input('Resting Blood Pressure')
-        
+        trestbps = st.number_input('Resting Blood Pressure (mm Hg)',
+                                   min_value=50, max_value=250, value=120, step=1)
+
     with col2:
-        chol = st.text_input('Serum Cholestoral in mg/dl')
-        
+        chol = st.number_input('Serum Cholestoral in mg/dl',
+                               min_value=100, max_value=600, value=200, step=1)
+
     with col3:
-        fbs = st.text_input('Fasting Blood Sugar > 120 mg/dl')
-        
+        fbs = st.selectbox('Fasting Blood Sugar > 120 mg/dl', options=[0, 1],
+                           format_func=lambda x: 'No' if x == 0 else 'Yes')
+
     with col1:
-        restecg = st.text_input('Resting Electrocardiographic results')
-        
+        restecg = st.selectbox('Resting Electrocardiographic results',
+                               options=[0, 1, 2],
+                               format_func=lambda x: {0: '0 - Normal',
+                                                      1: '1 - ST-T wave abnormality',
+                                                      2: '2 - Left ventricular hypertrophy'}[x])
+
     with col2:
-        thalach = st.text_input('Maximum Heart Rate achieved')
-        
+        thalach = st.number_input('Maximum Heart Rate achieved',
+                                  min_value=50, max_value=250, value=150, step=1)
+
     with col3:
-        exang = st.text_input('Exercise Induced Angina')
-        
+        exang = st.selectbox('Exercise Induced Angina', options=[0, 1],
+                             format_func=lambda x: 'No' if x == 0 else 'Yes')
+
     with col1:
-        oldpeak = st.text_input('ST depression induced by exercise')
-        
+        oldpeak = st.number_input('ST depression induced by exercise',
+                                  min_value=0.0, max_value=10.0, value=1.0, step=0.1)
+
     with col2:
-        slope = st.text_input('Slope of the peak exercise ST segment')
-        
+        slope = st.selectbox('Slope of the peak exercise ST segment',
+                             options=[0, 1, 2],
+                             format_func=lambda x: {0: '0 - Upsloping',
+                                                    1: '1 - Flat',
+                                                    2: '2 - Downsloping'}[x])
+
     with col3:
-        ca = st.text_input('Major vessels colored by flourosopy')
-        
+        ca = st.selectbox('Major vessels colored by flourosopy',
+                          options=[0, 1, 2, 3, 4])
+
     with col1:
-        thal = st.text_input('thal: 0 = normal; 1 = fixed defect; 2 = reversable defect')
-        
-        
-     
-     
+        thal = st.selectbox('Thal', options=[0, 1, 2],
+                            format_func=lambda x: {0: '0 - Normal',
+                                                   1: '1 - Fixed defect',
+                                                   2: '2 - Reversable defect'}[x])
+
     # code for Prediction
     heart_diagnosis = ''
-    
+
     # creating a button for Prediction
-    
     if st.button('Heart Disease Test Result'):
-        heart_prediction = heart_disease_model.predict([[age, sex, cp, trestbps, chol, fbs, restecg,thalach,exang,oldpeak,slope,ca,thal]])                          
-        
-        if (heart_prediction[0] == 1):
-          heart_diagnosis = 'The person is having heart disease'
+        user_input = [age, sex, cp, trestbps, chol, fbs, restecg,
+                      thalach, exang, oldpeak, slope, ca, thal]
+
+        heart_prediction = heart_disease_model.predict([user_input])
+
+        if heart_prediction[0] == 1:
+            heart_diagnosis = 'The person is having heart disease'
         else:
-          heart_diagnosis = 'The person does not have any heart disease'
+            heart_diagnosis = 'The person does not have any heart disease'
+
+        st.success(heart_diagnosis)
         
-    st.success(heart_diagnosis)
+
         
     
     
